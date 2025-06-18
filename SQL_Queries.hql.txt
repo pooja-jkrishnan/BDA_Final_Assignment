@@ -1,0 +1,26 @@
+USE default;
+
+-- 1. Total trips
+INSERT OVERWRITE DIRECTORY 'gs://taxi-bda-bucket/query-results/total_trips'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' 
+SELECT COUNT(*) FROM taxi_data1;
+
+-- 2. Trips by payment type
+INSERT OVERWRITE DIRECTORY 'gs://taxi-bda-bucket/query-results/trips_by_payment'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' 
+SELECT payment_type, COUNT(*) FROM taxi_data1 GROUP BY payment_type;
+
+-- 3. Top 5 companies
+INSERT OVERWRITE DIRECTORY 'gs://taxi-bda-bucket/query-results/top_companies'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' 
+SELECT company, COUNT(*) AS total FROM taxi_data1 GROUP BY company ORDER BY total DESC LIMIT 5;
+
+-- 4. Average fare and tip
+INSERT OVERWRITE DIRECTORY 'gs://taxi-bda-bucket/query-results/avg_fare_tip'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' 
+SELECT AVG(fare), AVG(tips) FROM taxi_data1;
+
+-- 5. Sample rows
+INSERT OVERWRITE DIRECTORY 'gs://taxi-bda-bucket/query-results/sample_data'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' 
+SELECT * FROM taxi_data1 LIMIT 10;
